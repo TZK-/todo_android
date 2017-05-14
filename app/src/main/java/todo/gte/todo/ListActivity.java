@@ -34,19 +34,21 @@ public class ListActivity extends AppCompatActivity {
 
         RequestQueue queue = Volley.newRequestQueue(ListActivity.this);
         String getListUrl = "";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getListUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //TODO parse JSON Response, create todo list, add to recyclerView
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // TODO display a toast ? Or fill list with warning message
-            }
-        });
-
+        try {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, getListUrl,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            //TODO parse JSON Response, create todo list, add to recyclerView
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // TODO display a toast ? Or fill list with warning message
+                }
+            });
+            queue.add(stringRequest);
+        } catch(RuntimeException e) {}
         // Test code, put it in onResponse when its done
         List<Todo> todoList = new ArrayList<>();
         todoList.add(new Todo(1, "Test todo 1", "", false, 1));
@@ -55,7 +57,6 @@ public class ListActivity extends AppCompatActivity {
 
         TodoAdapter mAdapter = new TodoAdapter(ListActivity.this, todoList);
         mAdapter.setAdapter(todoRView);
-        queue.add(stringRequest);
 
         // FAB to create new task, opens dialog
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

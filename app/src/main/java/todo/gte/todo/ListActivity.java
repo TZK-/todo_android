@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,14 +17,18 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ListActivity extends AppCompatActivity {
 
-    public RecyclerView todoList;
+    public RecyclerView todoRView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        View contentView = LayoutInflater.from(ListActivity.this).inflate(R.layout.content_list, null, false);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -42,6 +47,15 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
+        // Test code, put it in onResponse when its done
+        List<Todo> todoList = new ArrayList<>();
+        todoList.add(new Todo(1, "Test todo 1", "", false, 1));
+        todoList.add(new Todo(2, "Test todo 2", "", false, 1));
+        todoRView = (RecyclerView) contentView.findViewById(R.id.RTodoList);
+
+        TodoAdapter mAdapter = new TodoAdapter(ListActivity.this, todoList);
+        mAdapter.setAdapter(todoRView);
+        queue.add(stringRequest);
 
         // FAB to create new task, opens dialog
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

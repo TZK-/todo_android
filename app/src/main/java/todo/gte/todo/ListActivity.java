@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -37,7 +38,7 @@ public class ListActivity extends AppCompatActivity implements CreateTodoDialogF
         setSupportActionBar(toolbar);
 
         RequestQueue queue = Volley.newRequestQueue(ListActivity.this);
-        String getListUrl = "";
+        String getListUrl = "http://www.google.fr";
         try {
             StringRequest stringRequest = new StringRequest(Request.Method.GET, getListUrl,
                     new Response.Listener<String>() {
@@ -54,13 +55,18 @@ public class ListActivity extends AppCompatActivity implements CreateTodoDialogF
             queue.add(stringRequest);
         } catch(RuntimeException e) {}
         // Test code, put it in onResponse when its done
-        List<Todo> todoList = new ArrayList<>();
+        ArrayList<Todo> todoList = new ArrayList<>();
         todoList.add(new Todo(1, "Test todo 1", "", false, 1));
         todoList.add(new Todo(2, "Test todo 2", "", false, 1));
         todoRView = (RecyclerView) contentView.findViewById(R.id.RTodoList);
+        todoRView.setHasFixedSize(true);
 
-        TodoAdapter mAdapter = new TodoAdapter(ListActivity.this, todoList);
-        mAdapter.setAdapter(todoRView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        todoRView.setLayoutManager(linearLayoutManager);
+
+        TodoAdapter mAdapter = new TodoAdapter(todoList);
+        todoRView.setAdapter(mAdapter);
 
         // FAB to create new task, opens dialog
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

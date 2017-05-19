@@ -3,6 +3,7 @@ package todo.gte.todo;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,7 +25,7 @@ import com.android.volley.toolbox.Volley;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListActivity extends AppCompatActivity implements CreateTodoDialogFragment.CreateTodoDialogListener{
+public class ListActivity extends AppCompatActivity {
 
 
     public RecyclerView todoRView;
@@ -73,9 +76,6 @@ public class ListActivity extends AppCompatActivity implements CreateTodoDialogF
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-
                 ListActivity.this.showDialogTodo();
             }
         });
@@ -109,13 +109,13 @@ public class ListActivity extends AppCompatActivity implements CreateTodoDialogF
 
     }
 
-    @Override
-    public void onDialogPositiveClick(android.support.v4.app.DialogFragment dialog) {
-
-    }
-
-    @Override
-    public void onDialogNegativeClick(android.support.v4.app.DialogFragment dialog) {
-
-    }
+//    @Override
+//    public void onDialogPositiveClick(android.support.v4.app.DialogFragment dialog) {
+//
+//    }
+//
+//    @Override
+//    public void onDialogNegativeClick(android.support.v4.app.DialogFragment dialog) {
+//
+//    }
 }

@@ -1,4 +1,4 @@
-package todo.gte.todo;
+package todo.gte.controller;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

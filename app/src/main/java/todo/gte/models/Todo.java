@@ -1,8 +1,5 @@
-package todo.gte.todo;
+package todo.gte.models;
 
-/**
- * Created by gwenael on 14/05/17.
- */
 public class Todo {
 
     private int id;

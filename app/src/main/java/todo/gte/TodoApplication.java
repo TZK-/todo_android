@@ -1,4 +1,4 @@
-package todo.gte.todo;
+package todo.gte;
 
 import android.app.Application;
 import com.github.asifmujteba.easyvolley.EasyVolley;

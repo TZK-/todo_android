@@ -1,4 +1,4 @@
-package todo.gte.todo;
+package todo.gte.controller;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -18,16 +18,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
-import com.android.volley.*;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.github.asifmujteba.easyvolley.ASFRequestListener;
 import com.google.gson.JsonObject;
+import todo.gte.utils.RestClient;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -124,19 +120,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             RestClient restClient = new RestClient();
             restClient.setSubscriber(this)
-                    .addParam("email", email)
-                    .addParam("password", password)
-                    .post("login", new ASFRequestListener<JsonObject>() {
-                        @Override
-                        public void onSuccess(JsonObject response) {
-                            Toast.makeText(LoginActivity.this.getApplicationContext(), response.get("token").getAsString(), Toast.LENGTH_LONG).show();
-                        }
+                .addParam("email", email)
+                .addParam("password", password)
+                .post("login", new ASFRequestListener<JsonObject>() {
+                    @Override
+                    public void onSuccess(JsonObject response) {
+                        // Store token in application
+                        // Remove Loader
+                        // Redirect to ListActivity
+                        Toast.makeText(LoginActivity.this.getApplicationContext(), response.get("token").getAsString(), Toast.LENGTH_LONG).show();
+                    }
 
-                        @Override
-                        public void onFailure(Exception e) {
-                            Toast.makeText(LoginActivity.this.getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    @Override
+                    public void onFailure(Exception e) {
+                        // Remove Loader
+                        // Show error
+                        // Show LoginActivity
+                        Toast.makeText(LoginActivity.this.getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
         }
     }
 

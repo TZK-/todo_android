@@ -5,7 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -114,8 +116,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
             showProgress(true);
 
             RestClient restClient = new RestClient();
@@ -125,18 +125,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 .post("login", new ASFRequestListener<JsonObject>() {
                     @Override
                     public void onSuccess(JsonObject response) {
-                        // Store token in application
-                        // Remove Loader
-                        // Redirect to ListActivity
-                        Toast.makeText(LoginActivity.this.getApplicationContext(), response.get("token").getAsString(), Toast.LENGTH_LONG).show();
+                        if(!response.has("token")) {
+                            mEmailView.setError(getString(R.string.login_error));
+                        } else {
+                            SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("user_token", response.get("token").getAsString());
+
+                            Intent intent = new Intent(LoginActivity.this, ListActivity.class);
+                            startActivity(intent);
+                        }
+
+                        showProgress(false);
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-                        // Remove Loader
-                        // Show error
-                        // Show LoginActivity
-                        Toast.makeText(LoginActivity.this.getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        showProgress(false);
+                        Toast.makeText(LoginActivity.this.getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG)
+                                .show();
                     }
                 });
         }

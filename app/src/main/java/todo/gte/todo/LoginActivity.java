@@ -21,6 +21,8 @@ import android.widget.*;
 import com.android.volley.*;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.asifmujteba.easyvolley.ASFRequestListener;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -120,33 +122,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // perform the user login attempt.
             showProgress(true);
 
-            RequestQueue queue = Volley.newRequestQueue(this);
-            String url = "http://35.176.29.160/login";
+            RestClient restClient = new RestClient();
+            restClient.setSubscriber(this)
+                    .addParam("email", email)
+                    .addParam("password", password)
+                    .post("login", new ASFRequestListener<JsonObject>() {
+                        @Override
+                        public void onSuccess(JsonObject response) {
+                            Toast.makeText(LoginActivity.this.getApplicationContext(), response.get("token").getAsString(), Toast.LENGTH_LONG).show();
+                        }
 
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                    new Response.Listener<String>() {
                         @Override
-                        public void onResponse(String response) {
-                            System.out.println(response);
+                        public void onFailure(Exception e) {
+                            Toast.makeText(LoginActivity.this.getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(LoginActivity.this.getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-            ) {
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("email", email);
-                    params.put("password", password);
-                    return params;
-                }
-            };
-            // Add the request to the RequestQueue.
-            queue.add(stringRequest);
+                    });
         }
     }
 

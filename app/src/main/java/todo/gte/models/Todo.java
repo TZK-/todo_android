@@ -1,22 +1,19 @@
-package todo.gte.todo;
+package todo.gte.models;
 
-/**
- * Created by gwenael on 14/05/17.
- */
 public class Todo {
 
-    private int id;
-    private String title;
-    private String description;
-    private boolean ended;
-    private int user_id;
+    protected int id;
+    protected String title;
+    protected String description;
+    protected boolean ended;
+    protected User user;
 
-    public Todo(int id, String title, String description, boolean ended, int user_id) {
+    public Todo(int id, String title, String description, boolean ended, User user) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.ended = ended;
-        this.user_id = user_id;
+        this.user = user;
     }
 
     public int getId() {
@@ -51,11 +48,11 @@ public class Todo {
         this.ended = ended;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public User getUser() {
+        return user;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

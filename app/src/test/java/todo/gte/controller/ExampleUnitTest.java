@@ -1,4 +1,4 @@
-package todo.gte.todo;
+package todo.gte.controller;
 
 import org.junit.Test;
 

@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -202,9 +203,10 @@ public class AuthActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     protected void saveUserToken(String token) {
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("user_token", token);
+        editor.commit();
     }
 
     /**

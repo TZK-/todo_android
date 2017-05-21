@@ -26,6 +26,9 @@
                 android:name=".AuthActivity"
                 android:label="@string/title_activity_login"
                 android:noHistory="true">
+        </activity>
+        <activity android:name=".MainActivity"
+                  android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

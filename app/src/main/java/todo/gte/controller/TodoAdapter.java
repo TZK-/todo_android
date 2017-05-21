@@ -1,36 +1,43 @@
 package todo.gte.controller;
 
-import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import todo.gte.models.Todo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by gwenael on 14/05/17.
  */
-public class TodoAdapter extends ArrayAdapter<Todo> {
+public class TodoAdapter extends RecyclerView.Adapter<TodoRecyclerViewHolder> {
 
-    public TodoAdapter(Context context, List<Todo> todos) {
-        super(context, 0, todos);
+    private ArrayList<Todo> todoList = new ArrayList<>();
+
+    public TodoAdapter(ArrayList<Todo> todos) {
+        this.todoList = todos;
+    }
+
+    public int getItemCount() {
+        return this.todoList.size();
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public TodoRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int position) {
 
-        if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.todo_view,parent, false);
-        }
-        Todo todo = getItem(position);
+        View todoView = LayoutInflater.from(parent.getContext()).inflate(R.layout.todo_view, parent, false);
+        return new TodoRecyclerViewHolder(todoView);
 
-        TextView todoTitle = (TextView) convertView.findViewById(R.id.title);
+    }
 
-        todoTitle.setText(todo.getTitle());
+    @Override
+    public void onBindViewHolder(TodoRecyclerViewHolder holder, int i) {
+        holder.title.setText(this.todoList.get(i).getTitle());
+    }
 
-        return convertView;
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
     }
 }

@@ -36,7 +36,7 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        View contentView = LayoutInflater.from(ListActivity.this).inflate(R.layout.content_list, null, false);
+        View contentView = LayoutInflater.from(ListActivity.this).inflate(R.layout.content_list, null, true);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

@@ -36,7 +36,7 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        View contentView = LayoutInflater.from(ListActivity.this).inflate(R.layout.content_list, null, true);
+        View contentView = findViewById(R.id.content_list_include);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -63,14 +63,12 @@ public class ListActivity extends AppCompatActivity {
         todoList.add(new Todo(2, "Test todo 2", "", false, 1));
         todoRView = (RecyclerView) contentView.findViewById(R.id.RTodoList);
         todoRView.setHasFixedSize(true);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         todoRView.setLayoutManager(linearLayoutManager);
 
         TodoAdapter mAdapter = new TodoAdapter(todoList);
         todoRView.setAdapter(mAdapter);
-
         // FAB to create new task, opens dialog
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

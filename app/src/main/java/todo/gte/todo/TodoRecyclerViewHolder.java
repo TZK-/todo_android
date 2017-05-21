@@ -11,6 +11,6 @@ public class TodoRecyclerViewHolder extends RecyclerView.ViewHolder {
     public TodoRecyclerViewHolder(View itemView){
         super(itemView);
 
-        title = (TextView) itemView.findViewById(R.id.title);
+        this.title = (TextView) itemView.findViewById(R.id.todo_title);
     }
 }

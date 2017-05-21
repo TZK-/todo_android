@@ -37,8 +37,7 @@ public class CreateTodoDialogFragment extends DialogFragment {
         .setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        Toast toast = Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_LONG);
-                        toast.show();
+                        // Do nothing
                     }
                 });
 

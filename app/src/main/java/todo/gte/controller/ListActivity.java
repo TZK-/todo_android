@@ -23,6 +23,7 @@ import java.util.ArrayList;
 public class ListActivity extends AppCompatActivity {
 
     public RecyclerView todoRView;
+    public ArrayList<Todo> todoList;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,7 +74,7 @@ public class ListActivity extends AppCompatActivity {
         } catch (RuntimeException e) {
         }
         // Test code, put it in onResponse when its done
-        ArrayList<Todo> todoList = new ArrayList<>();
+        todoList = new ArrayList<>();
         // TODO Use the logged in user to add todos...
         todoList.add(new Todo(1, "Test todo 1", "", false, new User()));
         todoList.add(new Todo(2, "Test todo 2", "", false, new User()));
@@ -85,6 +86,8 @@ public class ListActivity extends AppCompatActivity {
 
         TodoAdapter mAdapter = new TodoAdapter(todoList);
         todoRView.setAdapter(mAdapter);
+
+        todoRView.getAdapter().notifyDataSetChanged();
         // FAB to create new task, opens dialog
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -100,14 +103,4 @@ public class ListActivity extends AppCompatActivity {
         dialog.show(getSupportFragmentManager(), "todo_fragment");
 
     }
-
-//    @Override
-//    public void onDialogPositiveClick(android.support.v4.app.DialogFragment dialog) {
-//
-//    }
-//
-//    @Override
-//    public void onDialogNegativeClick(android.support.v4.app.DialogFragment dialog) {
-//
-//    }
 }

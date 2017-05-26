@@ -1,10 +1,14 @@
 package todo.gte.controller;
 
+import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import com.google.gson.Gson;
+import todo.gte.TodoApplication;
+import todo.gte.models.User;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,12 +17,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String userToken = preferences.getString("user_token", null);
-        System.out.println(userToken);
+        String userJson = preferences.getString("user", null);
+
         // Load the appropriate activity depending if the user has already been logged in.
-        // TODO Check if the token is still valid from the API
         Class activity = AuthActivity.class;
-        if(userToken != null) {
+        if(userJson != null) {
+            // Load user data into user instance
+            Gson gson = new Gson();
+            TodoApplication application = (TodoApplication) getApplication();
+            application.setUser(gson.fromJson(userJson, User.class));
+
             activity = ListActivity.class;
         }
 

@@ -22,7 +22,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import com.github.asifmujteba.easyvolley.ASFRequestListener;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import todo.gte.models.User;
 import todo.gte.utils.RestClient;
 
 import java.util.ArrayList;
@@ -180,7 +182,7 @@ public class AuthActivity extends AppCompatActivity implements LoaderManager.Loa
         return new ASFRequestListener<JsonObject>() {
             @Override
             public void onSuccess(JsonObject response) {
-                saveUserToken(response.get("token").getAsString());
+                saveUserInformations(response);
                 Intent intent = new Intent(AuthActivity.this, ListActivity.class);
                 startActivity(intent);
                 showProgress(false);
@@ -202,10 +204,17 @@ public class AuthActivity extends AppCompatActivity implements LoaderManager.Loa
         return email.contains("@");
     }
 
-    protected void saveUserToken(String token) {
+    protected void saveUserInformations(JsonObject userJson) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("user_token", token);
+
+        User user = new User();
+        user.setAuthToken(userJson.get("token").toString())
+                .setId(userJson.getAsJsonObject("user").get("id").getAsInt())
+                .setEmail(userJson.getAsJsonObject("user").get("email").getAsString());
+
+        Gson gson = new Gson();
+        editor.putString("user", gson.toJson(user));
         editor.commit();
     }
 

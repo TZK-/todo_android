@@ -89,16 +89,15 @@ public class ListActivity extends AppCompatActivity {
         RestClient restClient = new RestClient();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String token = sharedPreferences.getString("user_token", "");
-        System.out.println("Bearer " + token);
         restClient.setSubscriber(ListActivity.this)
                 .addHeader("Authorization", "Bearer " + token)
                 .get("todos", getTodosCallback());
     }
 
-    protected ASFRequestListener<JSONObject> getTodosCallback() {
-        return new ASFRequestListener<JSONObject>() {
+    protected ASFRequestListener<JSONArray> getTodosCallback() {
+        return new ASFRequestListener<JSONArray>() {
             @Override
-            public void onSuccess(JSONObject response) {
+            public void onSuccess(JSONArray response) {
                 todoList = new ArrayList<>();
                 System.out.println(response.toString());
                 // TODO Use the logged in user to add todos...

@@ -7,15 +7,13 @@ import android.view.ViewGroup;
 import todo.gte.models.Todo;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by gwenael on 14/05/17.
- */
 public class TodoAdapter extends RecyclerView.Adapter<TodoRecyclerViewHolder> {
 
-    private ArrayList<Todo> todoList = new ArrayList<>();
+    private List<Todo> todoList = new ArrayList<>();
 
-    public TodoAdapter(ArrayList<Todo> todos) {
+    public TodoAdapter(List<Todo> todos) {
         this.todoList = todos;
     }
 
@@ -33,7 +31,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoRecyclerViewHolder> {
 
     @Override
     public void onBindViewHolder(TodoRecyclerViewHolder holder, int i) {
-        holder.title.setText(this.todoList.get(i).getTitle());
+        holder.title.setText(this.todoList.get(i).title);
     }
 
     @Override

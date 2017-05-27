@@ -12,27 +12,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.github.asifmujteba.easyvolley.ASFRequestListener;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import todo.gte.models.Todo;
-import todo.gte.models.User;
 import todo.gte.utils.RestClient;
 
-import java.util.ArrayList;
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class ListActivity extends AppCompatActivity {
 
     public RecyclerView todoRView;
-    public ArrayList<Todo> todoList;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,12 +72,6 @@ public class ListActivity extends AppCompatActivity {
         });
     }
 
-    public void showDialogTodo() {
-        CreateTodoDialogFragment dialog = new CreateTodoDialogFragment();
-        dialog.show(getSupportFragmentManager(), "todo_fragment");
-
-    }
-
     public void getTodoList() {
         RestClient restClient = new RestClient();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -95,22 +81,20 @@ public class ListActivity extends AppCompatActivity {
                 .get("todos", getTodosCallback());
     }
 
+    public void showDialogTodo() {
+        CreateTodoDialogFragment dialog = new CreateTodoDialogFragment();
+        dialog.show(getSupportFragmentManager(), "todo_fragment");
+
+    }
+
     protected ASFRequestListener<JsonObject> getTodosCallback() {
         return new ASFRequestListener<JsonObject>() {
             @Override
             public void onSuccess(JsonObject response) {
-                todoList = new ArrayList<>();
-                JsonArray jTodoList = response.getAsJsonArray("todos");
-                for (JsonElement el: jTodoList) {
-                    JsonObject jTodo = el.getAsJsonObject();
-                    todoList.add(new Todo(
-                            jTodo.get("id").getAsInt(),
-                            jTodo.get("title").getAsString(),
-                            jTodo.get("description").getAsString(),
-                            jTodo.get("ended").getAsBoolean(),
-                            null
-                    ));
-                }
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<Todo>>() {
+                }.getType();
+                List<Todo> todoList = gson.fromJson(response.getAsJsonArray("todos"), type);
 
                 todoRView.setHasFixedSize(true);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ListActivity.this);
@@ -126,7 +110,6 @@ public class ListActivity extends AppCompatActivity {
                 System.out.println(e.toString());
                 Toast eToast = Toast.makeText(ListActivity.this, "Error", Toast.LENGTH_LONG);
                 eToast.show();
-
             }
         };
     }

@@ -6,4 +6,7 @@ public class User {
 
     protected List<Todo> todos;
 
+    public List<Todo> todos() {
+        return todos;
+    }
 }

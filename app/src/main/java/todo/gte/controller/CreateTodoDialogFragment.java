@@ -79,7 +79,7 @@ public class CreateTodoDialogFragment extends DialogFragment {
                 String descriptionString = description.getText().toString();
 
                 if( titleString.trim().length() > 0){
-                    Todo todo = new Todo(1, titleString, descriptionString, false, new User());
+                    Todo todo = new Todo();
                     //TODO : Il faudrait que je recupère l'user connecté
 
                     proceedAddRequest(todo, "add");

@@ -209,9 +209,9 @@ public class AuthActivity extends AppCompatActivity implements LoaderManager.Loa
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         User user = new User();
-        user.setAuthToken(userJson.get("token").toString())
-                .setId(userJson.getAsJsonObject("user").get("id").getAsInt())
-                .setEmail(userJson.getAsJsonObject("user").get("email").getAsString());
+        user.authToken = userJson.get("token").getAsString();
+        user.id = userJson.getAsJsonObject("user").get("id").getAsInt();
+        user.email = userJson.getAsJsonObject("user").get("email").toString();
 
         Gson gson = new Gson();
         editor.putString("user", gson.toJson(user));

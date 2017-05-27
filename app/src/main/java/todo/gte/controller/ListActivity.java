@@ -92,8 +92,7 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onSuccess(JsonObject response) {
                 Gson gson = new Gson();
-                Type type = new TypeToken<List<Todo>>() {
-                }.getType();
+                Type type = new TypeToken<List<Todo>>() {}.getType();
                 List<Todo> todoList = gson.fromJson(response.getAsJsonArray("todos"), type);
 
                 todoRView.setHasFixedSize(true);
@@ -108,7 +107,7 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onFailure(Exception e) {
                 System.out.println(e.toString());
-                Toast eToast = Toast.makeText(ListActivity.this, "Error", Toast.LENGTH_LONG);
+                Toast eToast = Toast.makeText(ListActivity.this, "Error la", Toast.LENGTH_LONG);
                 eToast.show();
             }
         };

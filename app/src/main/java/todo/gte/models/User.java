@@ -5,14 +5,15 @@ import java.util.List;
 
 public class User {
 
-    protected int id;
-    protected String email;
-    protected String authToken;
+    public int id;
+    public String email;
+    public String authToken;
     protected List<Todo> todos;
 
     public User() {
         this.todos = new ArrayList<>();
     }
+
     public List<Todo> todos() {
         return todos;
     }

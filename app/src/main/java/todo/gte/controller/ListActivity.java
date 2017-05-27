@@ -75,8 +75,8 @@ public class ListActivity extends AppCompatActivity {
 
     public void getTodoList() {
         RestClient restClient = new RestClient();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String token = sharedPreferences.getString("user_token", null);
+        TodoApplication application = (TodoApplication) getApplication();
+        String token = application.getUser().authToken;
         restClient.setSubscriber(ListActivity.this)
                 .addHeader("Authorization", "Bearer " + token)
                 .get("todos", getTodosCallback());

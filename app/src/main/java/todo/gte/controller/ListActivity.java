@@ -19,9 +19,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.asifmujteba.easyvolley.ASFRequestListener;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
 import todo.gte.models.Todo;
 import todo.gte.models.User;
 import todo.gte.utils.RestClient;
@@ -88,21 +89,28 @@ public class ListActivity extends AppCompatActivity {
     public void getTodoList() {
         RestClient restClient = new RestClient();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String token = sharedPreferences.getString("user_token", "");
+        String token = sharedPreferences.getString("user_token", null);
         restClient.setSubscriber(ListActivity.this)
                 .addHeader("Authorization", "Bearer " + token)
                 .get("todos", getTodosCallback());
     }
 
-    protected ASFRequestListener<JSONArray> getTodosCallback() {
-        return new ASFRequestListener<JSONArray>() {
+    protected ASFRequestListener<JsonObject> getTodosCallback() {
+        return new ASFRequestListener<JsonObject>() {
             @Override
-            public void onSuccess(JSONArray response) {
+            public void onSuccess(JsonObject response) {
                 todoList = new ArrayList<>();
-                System.out.println(response.toString());
-                // TODO Use the logged in user to add todos...
-                /*todoList.add(new Todo(1, "Test todo 1", "", false, new User()));
-                todoList.add(new Todo(2, "Test todo 2", "", false, new User()));
+                JsonArray jTodoList = response.getAsJsonArray("todos");
+                for (JsonElement el: jTodoList) {
+                    JsonObject jTodo = el.getAsJsonObject();
+                    todoList.add(new Todo(
+                            jTodo.get("id").getAsInt(),
+                            jTodo.get("title").getAsString(),
+                            jTodo.get("description").getAsString(),
+                            jTodo.get("ended").getAsBoolean(),
+                            null
+                    ));
+                }
 
                 todoRView.setHasFixedSize(true);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ListActivity.this);
@@ -110,7 +118,7 @@ public class ListActivity extends AppCompatActivity {
                 todoRView.setLayoutManager(linearLayoutManager);
 
                 TodoAdapter mAdapter = new TodoAdapter(todoList);
-                todoRView.setAdapter(mAdapter);*/
+                todoRView.setAdapter(mAdapter);
             }
 
             @Override

@@ -58,11 +58,7 @@ public class ListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         todoRView = (RecyclerView) contentView.findViewById(R.id.RTodoList);
         getTodoList();
-
-        // Test code, put it in onResponse when its done
-
-
-        //todoRView.getAdapter().notifyDataSetChanged();
+        
         // FAB to create new task, opens dialog
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +98,6 @@ public class ListActivity extends AppCompatActivity {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ListActivity.this);
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 todoRView.setLayoutManager(linearLayoutManager);
-
                 TodoAdapter mAdapter = new TodoAdapter(app.getUser().todos());
                 todoRView.setAdapter(mAdapter);
             }

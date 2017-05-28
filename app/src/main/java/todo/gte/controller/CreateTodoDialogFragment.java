@@ -4,14 +4,23 @@ import android.app.*;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.github.asifmujteba.easyvolley.ASFRequestListener;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import todo.gte.TodoApplication;
 import todo.gte.models.Todo;
 import todo.gte.models.User;
 import todo.gte.utils.RestClient;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * Created by muhlinge on 18/05/17.
@@ -21,23 +30,46 @@ public class CreateTodoDialogFragment extends DialogFragment {
     private EditText title;
     private EditText description;
 
-    protected void proceedAddRequest(Todo todo, String endpoint) {
+    protected void proceedAddRequest(String title, String description, String endpoint) {
 
         //TODO : ajouter la tâche 'todo' à l'user connecté en passant par l'api
-
-//        String email = mEmailView.getText().toString();
-//        String password = mPasswordView.getText().toString();
-
+        TodoApplication application = (TodoApplication) getActivity().getApplication();
+        String token = application.getUser().authToken;
         RestClient restClient = new RestClient();
+        restClient.setSubscriber(getActivity())
+                .addHeader("Authorization", "Bearer " + token)
+                .addParam("title", title)
+                .addParam("description", description)
+                .post(endpoint, addTodoCallback());
+
+
+    }
+
+    protected ASFRequestListener<JsonObject> addTodoCallback() {
+        return new ASFRequestListener<JsonObject>() {
+            @Override
+            public void onSuccess(JsonObject response) {
+                Gson gson = new Gson();
+                Type type = new TypeToken<Todo>() {}.getType();
+                Todo todo = gson.fromJson(response, type);
+                addItemToAdapter(todo);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                System.out.println(e.toString());
+                Toast eToast = Toast.makeText(getActivity(), "Error la", Toast.LENGTH_LONG);
+                eToast.show();
+            }
+        };
     }
 
     protected void addItemToAdapter(Todo todo) {
 
-        //TODO : Récuperer l'array list et ajouter la tâche todoà celle-ci
-        //TODO : Notifier l'adapter qu'on a ajouté un élément
-
-//        listActivity.todoList.add(todo);
-//        listActivity.todoRView.getAdapter().notifyDataSetChanged();
+        TodoApplication app = (TodoApplication) getActivity().getApplication();
+        app.getUser().todos().add(todo);
+        RecyclerView todoRView = (RecyclerView) getActivity().findViewById(R.id.RTodoList);
+        todoRView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -82,7 +114,7 @@ public class CreateTodoDialogFragment extends DialogFragment {
                     Todo todo = new Todo();
                     //TODO : Il faudrait que je recupère l'user connecté
 
-                    proceedAddRequest(todo, "add");
+                    proceedAddRequest(titleString, descriptionString, "todos");
                     addItemToAdapter(todo);
 
                     dialog.dismiss();

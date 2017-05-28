@@ -24,6 +24,7 @@ import android.widget.EditText;
 import com.github.asifmujteba.easyvolley.ASFRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import todo.gte.TodoApplication;
 import todo.gte.models.User;
 import todo.gte.utils.RestClient;
 
@@ -212,6 +213,9 @@ public class AuthActivity extends AppCompatActivity implements LoaderManager.Loa
         user.authToken = userJson.get("token").getAsString();
         user.id = userJson.getAsJsonObject("user").get("id").getAsInt();
         user.email = userJson.getAsJsonObject("user").get("email").toString();
+
+        TodoApplication app = (TodoApplication) getApplication();
+        app.setUser(user);
 
         Gson gson = new Gson();
         editor.putString("user", gson.toJson(user));

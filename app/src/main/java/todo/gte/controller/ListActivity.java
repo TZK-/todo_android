@@ -1,13 +1,12 @@
 package todo.gte.controller;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +25,7 @@ import java.util.List;
 public class ListActivity extends AppCompatActivity {
 
     public RecyclerView todoRView;
+    protected TodoApplication app;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,12 +53,14 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        app = (TodoApplication) getApplication();
+
         View contentView = findViewById(R.id.content_list_include);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         todoRView = (RecyclerView) contentView.findViewById(R.id.RTodoList);
         getTodoList();
-        
+
         // FAB to create new task, opens dialog
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -70,18 +72,14 @@ public class ListActivity extends AppCompatActivity {
     }
 
     public void getTodoList() {
-        RestClient restClient = new RestClient();
-        TodoApplication application = (TodoApplication) getApplication();
-        String token = application.getUser().authToken;
-        restClient.setSubscriber(ListActivity.this)
-                .addHeader("Authorization", "Bearer " + token)
+        RestClient restClient = new RestClient(app.getUser());
+        restClient.setSubscriber(this)
                 .get("todos", getTodosCallback());
     }
 
     public void showDialogTodo() {
         CreateTodoDialogFragment dialog = new CreateTodoDialogFragment();
         dialog.show(getSupportFragmentManager(), "todo_fragment");
-
     }
 
     protected ASFRequestListener<JsonObject> getTodosCallback() {
@@ -91,7 +89,6 @@ public class ListActivity extends AppCompatActivity {
                 Gson gson = new Gson();
                 Type type = new TypeToken<List<Todo>>() {}.getType();
                 List<Todo> todoList = gson.fromJson(response.getAsJsonArray("todos"), type);
-                TodoApplication app = (TodoApplication) getApplication();
                 app.getUser().todos().addAll(todoList);
 
                 todoRView.setHasFixedSize(true);

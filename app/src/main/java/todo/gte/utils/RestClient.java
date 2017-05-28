@@ -5,6 +5,7 @@ import com.github.asifmujteba.easyvolley.ASFRequest;
 import com.github.asifmujteba.easyvolley.ASFRequestBuilder;
 import com.github.asifmujteba.easyvolley.ASFRequestListener;
 import com.github.asifmujteba.easyvolley.EasyVolley;
+import todo.gte.models.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,13 @@ public class RestClient {
         mHeaders = new HashMap<>();
         mParams = new HashMap<>();
         mActivity = null;
+    }
+
+    public RestClient(User user) {
+        this();
+        if(user.authToken != null) {
+            addHeader("Authorization", "Bearer " + user.authToken);
+        }
     }
 
     public RestClient setSubscriber(Activity activity) {

@@ -10,7 +10,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.*;
 import com.github.asifmujteba.easyvolley.ASFRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -22,10 +22,12 @@ import todo.gte.utils.RestClient;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class ListActivity extends AppCompatActivity {
+public class ListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     public RecyclerView todoRView;
     protected TodoApplication app;
+    public String selected_filter;
+    private String search_field_value;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -69,17 +71,55 @@ public class ListActivity extends AppCompatActivity {
                 ListActivity.this.showDialogTodo();
             }
         });
+
+        // Button to search through tasks
+        Button search_button = (Button) findViewById(R.id.search_button);
+        search_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ListActivity.this.searchThroughTasks();
+            }
+        });
+
+        // Spinner to filter tasks
+        Spinner filter_spinner = (Spinner) findViewById(R.id.filter);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.test_spinner, //TODO : REMPLIR CE STRING_ARRAY PAR CE QU'ON VEUT VRAIMENT DANS LE SPINNER (=> strings.xml)
+                android.R.layout.simple_spinner_item);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        filter_spinner.setAdapter(adapter);
+        filter_spinner.setOnItemSelectedListener(this);
     }
 
-    public void getTodoList() {
+    private void getTodoList() {
         RestClient restClient = new RestClient(app.getUser());
         restClient.setSubscriber(this)
                 .get("todos", getTodosCallback());
     }
 
-    public void showDialogTodo() {
+    private void showDialogTodo() {
         CreateTodoDialogFragment dialog = new CreateTodoDialogFragment();
         dialog.show(getSupportFragmentManager(), "todo_fragment");
+    }
+
+    private void searchThroughTasks() {
+
+        // TODO : EFFECTUER LA RECHERCHE
+        // valeur du spinner = this.selected_filter;
+
+        // Search field
+        EditText search_field = (EditText) findViewById(R.id.search_field);
+        this.search_field_value = search_field.getText().toString();
+
+        Toast eToast = Toast.makeText(ListActivity.this, this.search_field_value, Toast.LENGTH_LONG);
+        eToast.show();
+
+//        Toast eToast = Toast.makeText(ListActivity.this, this.selected_filter, Toast.LENGTH_LONG);
+//        eToast.show();
     }
 
     protected ASFRequestListener<JsonObject> getTodosCallback() {
@@ -106,5 +146,18 @@ public class ListActivity extends AppCompatActivity {
                 eToast.show();
             }
         };
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos)
+
+        this.selected_filter = parent.getItemAtPosition(pos).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
     }
 }

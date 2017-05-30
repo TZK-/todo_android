@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +14,7 @@ import com.github.asifmujteba.easyvolley.ASFRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 import todo.gte.TodoApplication;
 import todo.gte.models.Todo;
 import todo.gte.utils.RestClient;
@@ -127,16 +127,22 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onSuccess(JsonObject response) {
                 Gson gson = new Gson();
-                Type type = new TypeToken<List<Todo>>() {}.getType();
+                Type type = new TypeToken<List<Todo>>() {
+                }.getType();
                 List<Todo> todoList = gson.fromJson(response.getAsJsonArray("todos"), type);
                 app.getUser().todos().addAll(todoList);
 
                 todoRView.setHasFixedSize(true);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ListActivity.this);
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                todoRView.setLayoutManager(linearLayoutManager);
+
                 TodoAdapter mAdapter = new TodoAdapter(app.getUser().todos());
-                todoRView.setAdapter(mAdapter);
+                RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();
+                RecyclerView.Adapter wrappedAdapter = swipeManager.createWrappedAdapter(mAdapter);
+                todoRView.setAdapter(wrappedAdapter);
+                todoRView.setLayoutManager(linearLayoutManager);
+
+                swipeManager.attachRecyclerView(todoRView);
             }
 
             @Override

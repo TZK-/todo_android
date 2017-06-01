@@ -25,8 +25,8 @@ import java.lang.reflect.Type;
  */
 public class CreateTodoDialogFragment extends DialogFragment {
 
-    private EditText title;
-    private EditText description;
+    private EditText mTitle;
+    private EditText mDescription;
 
     @Override
     public void onAttach(Activity activity) {
@@ -78,8 +78,8 @@ public class CreateTodoDialogFragment extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_create_todo, null);
-        this.title = (EditText) dialogView.findViewById(R.id.title);
-        this.description = (EditText) dialogView.findViewById(R.id.description);
+        this.mTitle = (EditText) dialogView.findViewById(R.id.title);
+        this.mDescription = (EditText) dialogView.findViewById(R.id.description);
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -105,13 +105,13 @@ public class CreateTodoDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 // Send the positive button event back to the host activity
-                String titleString = title.getText().toString();
-                String descriptionString = description.getText().toString();
+                String titleString = mTitle.getText().toString();
+                String descriptionString = mDescription.getText().toString();
 
                 if (titleString.trim().length() > 0) {
                     proceedAddRequest(titleString, descriptionString, "todos");
                 } else {
-                    title.setError(getResources().getString(R.string.alert_fill_title));
+                    mTitle.setError(getResources().getString(R.string.alert_fill_title));
                 }
             }
         });

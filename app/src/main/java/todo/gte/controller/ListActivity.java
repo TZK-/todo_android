@@ -14,7 +14,6 @@ import com.github.asifmujteba.easyvolley.ASFRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 import todo.gte.TodoApplication;
 import todo.gte.models.Todo;
 import todo.gte.utils.RestClient;
@@ -24,10 +23,10 @@ import java.util.List;
 
 public class ListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
-    public RecyclerView todoRView;
-    protected TodoApplication app;
-    public String selectedFilter;
-    private String searchFieldValue;
+    protected RecyclerView mTodoRView;
+    protected TodoApplication mApp;
+    protected String mSelectedFilter;
+    protected String mSearchFieldValue;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -55,20 +54,20 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        app = (TodoApplication) getApplication();
+        mApp = (TodoApplication) getApplication();
 
         View contentView = findViewById(R.id.content_list_include);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        todoRView = (RecyclerView) contentView.findViewById(R.id.RTodoList);
-        todoRView.setHasFixedSize(true);
+        mTodoRView = (RecyclerView) contentView.findViewById(R.id.RTodoList);
+        mTodoRView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ListActivity.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        todoRView.setLayoutManager(linearLayoutManager);
+        mTodoRView.setLayoutManager(linearLayoutManager);
 
-        TodoAdapter mAdapter = new TodoAdapter(app.getUser().todos());
-        todoRView.setAdapter(mAdapter);
+        TodoAdapter mAdapter = new TodoAdapter(mApp.getUser().todos());
+        mTodoRView.setAdapter(mAdapter);
 
         getTodoList();
 
@@ -105,7 +104,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void getTodoList() {
-        RestClient restClient = new RestClient(app.getUser());
+        RestClient restClient = new RestClient(mApp.getUser());
         restClient.setSubscriber(this)
                 .get("todos", getTodosCallback());
     }
@@ -118,16 +117,16 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
     private void searchThroughTasks() {
 
         // TODO : EFFECTUER LA RECHERCHE
-        // valeur du spinner = this.selectedFilter;
+        // valeur du spinner = this.mSelectedFilter;
 
         // Search field
         EditText searchField = (EditText) findViewById(R.id.search_field);
-        this.searchFieldValue = searchField.getText().toString();
+        this.mSearchFieldValue = searchField.getText().toString();
 
-        Toast eToast = Toast.makeText(ListActivity.this, this.searchFieldValue, Toast.LENGTH_LONG);
+        Toast eToast = Toast.makeText(ListActivity.this, this.mSearchFieldValue, Toast.LENGTH_LONG);
         eToast.show();
 
-//        Toast eToast = Toast.makeText(ListActivity.this, this.selectedFilter, Toast.LENGTH_LONG);
+//        Toast eToast = Toast.makeText(ListActivity.this, this.mSelectedFilter, Toast.LENGTH_LONG);
 //        eToast.show();
     }
 
@@ -139,9 +138,9 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
                 Type type = new TypeToken<List<Todo>>() {
                 }.getType();
                 List<Todo> todoList = gson.fromJson(response.getAsJsonArray("todos"), type);
-                app.getUser().todos().addAll(todoList);
+                mApp.getUser().todos().addAll(todoList);
 
-                todoRView.getAdapter().notifyDataSetChanged();
+                mTodoRView.getAdapter().notifyDataSetChanged();
             }
 
             @Override
@@ -158,7 +157,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
 
-        this.selectedFilter = parent.getItemAtPosition(pos).toString();
+        this.mSelectedFilter = parent.getItemAtPosition(pos).toString();
     }
 
     @Override

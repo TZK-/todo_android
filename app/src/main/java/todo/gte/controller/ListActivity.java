@@ -60,7 +60,16 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
         View contentView = findViewById(R.id.content_list_include);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         todoRView = (RecyclerView) contentView.findViewById(R.id.RTodoList);
+        todoRView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ListActivity.this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        todoRView.setLayoutManager(linearLayoutManager);
+
+        TodoAdapter mAdapter = new TodoAdapter(app.getUser().todos());
+        todoRView.setAdapter(mAdapter);
+
         getTodoList();
 
         // FAB to create new task, opens dialog
@@ -86,7 +95,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
-                R.array.spinner, //TODO : REMPLIR CE STRING_ARRAY PAR CE QU'ON VEUT VRAIMENT DANS LE SPINNER (=> strings.xml)
+                R.array.spinner,
                 android.R.layout.simple_spinner_item);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -132,17 +141,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
                 List<Todo> todoList = gson.fromJson(response.getAsJsonArray("todos"), type);
                 app.getUser().todos().addAll(todoList);
 
-                todoRView.setHasFixedSize(true);
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ListActivity.this);
-                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-                TodoAdapter mAdapter = new TodoAdapter(app.getUser().todos());
-                RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();
-                RecyclerView.Adapter wrappedAdapter = swipeManager.createWrappedAdapter(mAdapter);
-                todoRView.setAdapter(wrappedAdapter);
-                todoRView.setLayoutManager(linearLayoutManager);
-
-                swipeManager.attachRecyclerView(todoRView);
+                todoRView.getAdapter().notifyDataSetChanged();
             }
 
             @Override

@@ -1,6 +1,8 @@
 package todo.gte.models;
 
-public class Todo {
+import java.io.Serializable;
+
+public class Todo implements Serializable {
 
     public int id;
     public String title;

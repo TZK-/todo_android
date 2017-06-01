@@ -27,6 +27,7 @@
                 android:label="@string/title_activity_login"
                 android:noHistory="true">
         </activity>
+<<<<<<< HEAD
         <activity android:name=".MainActivity"
                   android:noHistory="true">
         </activity>
@@ -37,6 +38,15 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+=======
+        <activity
+                android:name=".MainActivity"
+                android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+>>>>>>> 71438a2f739bbf8d66370b6ecd708e1948059f03
             </intent-filter>
         </activity>
         <activity

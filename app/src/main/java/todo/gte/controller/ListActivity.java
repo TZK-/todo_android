@@ -26,8 +26,8 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public RecyclerView todoRView;
     protected TodoApplication app;
-    public String selected_filter;
-    private String search_field_value;
+    public String selectedFilter;
+    private String searchFieldValue;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,8 +73,8 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         // Button to search through tasks
-        Button search_button = (Button) findViewById(R.id.search_button);
-        search_button.setOnClickListener(new View.OnClickListener() {
+        Button searchButton = (Button) findViewById(R.id.search_button);
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ListActivity.this.searchThroughTasks();
@@ -86,7 +86,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
-                R.array.test_spinner, //TODO : REMPLIR CE STRING_ARRAY PAR CE QU'ON VEUT VRAIMENT DANS LE SPINNER (=> strings.xml)
+                R.array.spinner, //TODO : REMPLIR CE STRING_ARRAY PAR CE QU'ON VEUT VRAIMENT DANS LE SPINNER (=> strings.xml)
                 android.R.layout.simple_spinner_item);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -109,16 +109,16 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
     private void searchThroughTasks() {
 
         // TODO : EFFECTUER LA RECHERCHE
-        // valeur du spinner = this.selected_filter;
+        // valeur du spinner = this.selectedFilter;
 
         // Search field
-        EditText search_field = (EditText) findViewById(R.id.search_field);
-        this.search_field_value = search_field.getText().toString();
+        EditText searchField = (EditText) findViewById(R.id.search_field);
+        this.searchFieldValue = searchField.getText().toString();
 
-        Toast eToast = Toast.makeText(ListActivity.this, this.search_field_value, Toast.LENGTH_LONG);
+        Toast eToast = Toast.makeText(ListActivity.this, this.searchFieldValue, Toast.LENGTH_LONG);
         eToast.show();
 
-//        Toast eToast = Toast.makeText(ListActivity.this, this.selected_filter, Toast.LENGTH_LONG);
+//        Toast eToast = Toast.makeText(ListActivity.this, this.selectedFilter, Toast.LENGTH_LONG);
 //        eToast.show();
     }
 
@@ -159,7 +159,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
 
-        this.selected_filter = parent.getItemAtPosition(pos).toString();
+        this.selectedFilter = parent.getItemAtPosition(pos).toString();
     }
 
     @Override

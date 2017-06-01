@@ -1,10 +1,7 @@
-package todo.gte.controller;
+package todo.gte.callbacks;
 
 import todo.gte.models.Todo;
 
-/**
- * Created by gwenael on 01/06/17.
- */
 public interface OnTodoClickListener {
     void onItemClick(Todo item);
 }

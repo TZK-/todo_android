@@ -6,12 +6,12 @@ import todo.gte.models.User;
 
 public class TodoApplication extends Application {
 
-    protected User user;
+    protected User mUser;
 
     @Override
     public void onCreate() {
         EasyVolley.initialize(getApplicationContext());
-        user = null;
+        mUser = null;
     }
 
     @Override
@@ -20,11 +20,11 @@ public class TodoApplication extends Application {
     }
 
     public User getUser() {
-        return user;
+        return mUser;
     }
 
     public TodoApplication setUser(User user) {
-        this.user = user;
+        mUser = user;
 
         return this;
     }

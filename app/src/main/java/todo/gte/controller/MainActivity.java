@@ -1,11 +1,10 @@
 package todo.gte.controller;
 
-import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import com.google.gson.Gson;
 import todo.gte.TodoApplication;
 import todo.gte.models.User;
@@ -21,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Load the appropriate activity depending if the user has already been logged in.
         Class activity = AuthActivity.class;
-        if(userJson != null) {
+        if (userJson != null) {
             // Load user data into user instance
             Gson gson = new Gson();
             TodoApplication application = (TodoApplication) getApplication();

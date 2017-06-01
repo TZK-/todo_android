@@ -39,7 +39,7 @@ public class CreateTodoDialogFragment extends DialogFragment {
         RestClient restClient = new RestClient();
         restClient.setSubscriber(getActivity())
                 .addHeader("Authorization", "Bearer " + token)
-                .addParam("title", title)
+                .addParam("mTitleTextView", title)
                 .addParam("description", description)
                 .post(endpoint, addTodoCallback());
 

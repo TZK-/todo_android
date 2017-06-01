@@ -18,10 +18,12 @@ import static com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemC
 public class TodoAdapter extends RecyclerView.Adapter<TodoRecyclerViewHolder> implements SwipeableItemAdapter<TodoRecyclerViewHolder> {
 
     private List<Todo> todoList = new ArrayList<>();
+    private final OnTodoClickListener listener;
 
-    public TodoAdapter(List<Todo> todos) {
+    public TodoAdapter(List<Todo> todos, OnTodoClickListener listener) {
         setHasStableIds(true);
         this.todoList = todos;
+        this.listener = listener;
     }
 
     public int getItemCount() {
@@ -38,7 +40,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoRecyclerViewHolder> im
 
     @Override
     public void onBindViewHolder(TodoRecyclerViewHolder holder, int i) {
-        holder.title.setText(this.todoList.get(i).title);
+        holder.bind(todoList.get(i), listener);
     }
 
     @Override
@@ -74,5 +76,9 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoRecyclerViewHolder> im
                 System.out.println("OK SLIDE");
             }
         };
+    }
+
+    public void bind() {
+
     }
 }

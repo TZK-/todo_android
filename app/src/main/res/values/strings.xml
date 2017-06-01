@@ -28,5 +28,6 @@
         <item>Active</item>
         <item>Finished</item>
     </string-array>
+    <string name="title_activity_todo_details">TodoDetailsActivity</string>
 </resources>
 

@@ -27,12 +27,19 @@
                 android:label="@string/title_activity_login"
                 android:noHistory="true">
         </activity>
-        <activity android:name=".MainActivity"
-                  android:noHistory="true">
+        <activity
+                android:name=".MainActivity"
+                android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+                android:name=".TodoDetailsActivity"
+                android:label="@string/title_activity_todo_details"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

@@ -1,5 +1,6 @@
 package todo.gte.controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -67,7 +68,14 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         todoRView.setLayoutManager(linearLayoutManager);
 
-        TodoAdapter mAdapter = new TodoAdapter(app.getUser().todos());
+        TodoAdapter mAdapter = new TodoAdapter(app.getUser().todos(), new OnTodoClickListener() {
+            @Override
+            public void onItemClick(Todo todo) {
+                Intent intent = new Intent(ListActivity.this, TodoDetailsActivity.class);
+                intent.putExtra("todo", todo);
+                startActivity(intent);
+            }
+        });
         todoRView.setAdapter(mAdapter);
 
         getTodoList();

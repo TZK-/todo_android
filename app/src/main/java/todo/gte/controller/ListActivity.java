@@ -21,6 +21,7 @@ import todo.gte.models.Todo;
 import todo.gte.utils.RestClient;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 
 public class ListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -157,7 +158,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
                 }.getType();
                 List<Todo> todoList = gson.fromJson(response.getAsJsonArray("todos"), type);
                 mApplication.getUser().todos().addAll(todoList);
-
+                Collections.reverse(mApplication.getUser().todos());
                 mTodoRecyclerView.getAdapter().notifyDataSetChanged();
             }
 

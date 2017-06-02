@@ -91,6 +91,9 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
 
         mTodoRecyclerView.setAdapter(mAdapter);
 
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
+        mTodoRecyclerView.addItemDecoration(itemDecoration);
+
         fetchTodos();
 
         // FAB to create new task, opens dialog

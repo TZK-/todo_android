@@ -1,12 +1,14 @@
 package todo.gte.controller;
 
 import android.content.Intent;
+import android.graphics.*;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +32,8 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
     public String mSelectedFilter;
     protected TodoApplication mApplication;
     private String mSearchFieldValue;
+    private TodoAdapter mAdapter;
+    private Paint p = new Paint();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,7 +85,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mTodoRecyclerView.setLayoutManager(linearLayoutManager);
 
-        TodoAdapter mAdapter = new TodoAdapter(mApplication.getUser().todos(), new OnTodoClickListener() {
+        mAdapter = new TodoAdapter(mApplication.getUser().todos(), new OnTodoClickListener() {
             @Override
             public void onItemClick(Todo todo) {
                 Intent intent = new Intent(ListActivity.this, TodoDetailsActivity.class);
@@ -126,6 +130,8 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
         spinerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         filterSpinner.setAdapter(spinerAdapter);
         filterSpinner.setOnItemSelectedListener(this);
+
+        initSwipe();
     }
 
     private void fetchTodos() {
@@ -147,6 +153,60 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
 
         Toast eToast = Toast.makeText(ListActivity.this, this.mSearchFieldValue, Toast.LENGTH_LONG);
         eToast.show();
+    }
+
+    private void initSwipe(){
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+
+                if (direction == ItemTouchHelper.LEFT){
+                    Toast eToast = Toast.makeText(ListActivity.this, "LEFT", Toast.LENGTH_LONG);
+                    eToast.show();
+                } else {
+                    Toast eToast = Toast.makeText(ListActivity.this, "RIGHT", Toast.LENGTH_LONG);
+                    eToast.show();
+                }
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                Bitmap icon;
+                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+
+                    View itemView = viewHolder.itemView;
+                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                    float width = height / 3;
+
+                    if(dX > 0){
+                        p.setColor(Color.parseColor("#388E3C"));
+                        RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
+                        c.drawRect(background,p);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_edit);
+                        RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
+                        c.drawBitmap(icon,null,icon_dest,p);
+                    } else {
+                        p.setColor(Color.parseColor("#D32F2F"));
+                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
+                        c.drawRect(background,p);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete);
+                        RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
+                        c.drawBitmap(icon,null,icon_dest,p);
+                    }
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(mTodoRecyclerView);
     }
 
     protected ASFRequestListener<JsonObject> getTodosCallback() {

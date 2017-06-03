@@ -1,7 +1,8 @@
-package todo.gte.controller;
+package todo.gte.controller.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import todo.gte.controller.R;
 
 public class FilteredListActivity extends AppCompatActivity {
 

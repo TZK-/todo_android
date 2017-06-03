@@ -1,4 +1,4 @@
-package todo.gte.controller;
+package todo.gte.controller.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import todo.gte.TodoApplication;
 import todo.gte.callbacks.OnTodoClickListener;
+import todo.gte.controller.CreateTodoDialogFragment;
+import todo.gte.controller.adapters.DividerItemDecoration;
+import todo.gte.controller.R;
+import todo.gte.controller.adapters.TodoAdapter;
 import todo.gte.models.Todo;
 import todo.gte.utils.RestClient;
 

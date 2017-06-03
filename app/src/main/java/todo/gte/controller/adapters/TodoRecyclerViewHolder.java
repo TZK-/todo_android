@@ -1,10 +1,11 @@
-package todo.gte.controller;
+package todo.gte.controller.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import todo.gte.callbacks.OnTodoClickListener;
+import todo.gte.controller.R;
 import todo.gte.models.Todo;
 
 public class TodoRecyclerViewHolder extends RecyclerView.ViewHolder {

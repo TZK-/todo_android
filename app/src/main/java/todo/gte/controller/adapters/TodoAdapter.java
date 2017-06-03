@@ -16,6 +16,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoRecyclerViewHolder> {
     private List<Todo> mTodoList;
 
     public TodoAdapter(List<Todo> todos, OnTodoClickListener listener) {
+        setHasStableIds(true);
         this.mTodoList = todos;
         this.mTodoClickListener = listener;
     }
@@ -45,5 +46,6 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoRecyclerViewHolder> {
     public long getItemId(int position) {
         return mTodoList.get(position).id;
     }
+
 
 }

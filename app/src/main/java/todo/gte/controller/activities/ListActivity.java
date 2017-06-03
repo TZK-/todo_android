@@ -20,9 +20,10 @@ import com.google.gson.reflect.TypeToken;
 import todo.gte.TodoApplication;
 import todo.gte.callbacks.OnTodoClickListener;
 import todo.gte.controller.CreateTodoDialogFragment;
-import todo.gte.controller.adapters.DividerItemDecoration;
 import todo.gte.controller.R;
+import todo.gte.controller.adapters.DividerItemDecoration;
 import todo.gte.controller.adapters.TodoAdapter;
+import todo.gte.controller.adapters.TodoRecyclerViewHolder;
 import todo.gte.models.Todo;
 import todo.gte.utils.RestClient;
 
@@ -168,13 +169,26 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
+            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+                final long todoId = viewHolder.getItemId();
 
                 if (direction == ItemTouchHelper.LEFT){
-                    Toast eToast = Toast.makeText(ListActivity.this, "LEFT", Toast.LENGTH_LONG);
-                    eToast.show();
+                    RestClient restClient = new RestClient(mApplication.getUser());
+                    restClient.setSubscriber(ListActivity.this)
+                            .delete("todos/" + todoId, new ASFRequestListener() {
+                                @Override
+                                public void onSuccess(Object response) {
+                                    mApplication.getUser().todos().remove(todoId);
+                                    mTodoRecyclerView.getAdapter().notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+                                    System.err.println(e.getMessage());
+                                }
+                            });
                 } else {
+                    System.out.println("right");
                     Toast eToast = Toast.makeText(ListActivity.this, "RIGHT", Toast.LENGTH_LONG);
                     eToast.show();
                 }
@@ -209,6 +223,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         };
+
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(mTodoRecyclerView);
     }

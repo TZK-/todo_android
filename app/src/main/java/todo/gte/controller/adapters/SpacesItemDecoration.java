@@ -1,4 +1,4 @@
-package todo.gte.controller;
+package todo.gte.controller.adapters;
 
 /*
 
@@ -17,9 +17,11 @@ import android.view.View;
 public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
     private final int mSpace;
+
     public SpacesItemDecoration(int space) {
         this.mSpace = space;
     }
+
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         outRect.left = mSpace;

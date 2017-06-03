@@ -1,4 +1,4 @@
-package todo.gte.controller;
+package todo.gte.controller.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

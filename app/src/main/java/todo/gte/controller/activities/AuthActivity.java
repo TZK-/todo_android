@@ -1,4 +1,4 @@
-package todo.gte.controller;
+package todo.gte.controller.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -25,6 +25,7 @@ import com.github.asifmujteba.easyvolley.ASFRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import todo.gte.TodoApplication;
+import todo.gte.controller.R;
 import todo.gte.models.User;
 import todo.gte.utils.RestClient;
 

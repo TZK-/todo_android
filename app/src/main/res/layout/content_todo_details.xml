@@ -12,7 +12,7 @@
         android:paddingBottom="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/activity_todo_details"
-        tools:context="todo.gte.controller.TodoDetailsActivity">
+        tools:context="todo.gte.controller.activities.TodoDetailsActivity">
 
     <TextView
             android:text="TextView"

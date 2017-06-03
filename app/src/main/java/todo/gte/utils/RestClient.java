@@ -18,23 +18,36 @@ public class RestClient {
     protected Map<String, String> mParams;
     protected Activity mActivity;
 
+    public RestClient(User user) {
+        this();
+
+        if (user.authToken != null) {
+            addHeader("Authorization", "Bearer " + user.authToken);
+        }
+
+        addHeader("Content-Type", "application/json");
+    }
+
     public RestClient() {
         mHeaders = new HashMap<>();
         mParams = new HashMap<>();
         mActivity = null;
     }
 
-    public RestClient(User user) {
-        this();
-        if(user.authToken != null) {
-            addHeader("Authorization", "Bearer " + user.authToken);
-        }
+    public RestClient addHeader(String header, String value) {
+        mHeaders.put(header, value);
+
+        return this;
     }
 
     public RestClient setSubscriber(Activity activity) {
         mActivity = activity;
 
         return this;
+    }
+
+    public void get(String url, ASFRequestListener callback) {
+        request(url, ASFRequest.METHOD.GET, callback);
     }
 
     protected void request(String url, ASFRequest.METHOD method, ASFRequestListener callback) throws NullPointerException {
@@ -59,10 +72,6 @@ public class RestClient {
                 .start();
     }
 
-    public void get(String url, ASFRequestListener callback) {
-        request(url, ASFRequest.METHOD.GET, callback);
-    }
-
     public void post(String url, ASFRequestListener callback) {
         request(url, ASFRequest.METHOD.POST, callback);
     }
@@ -73,12 +82,6 @@ public class RestClient {
 
     public void delete(String url, ASFRequestListener callback) {
         request(url, ASFRequest.METHOD.DELETE, callback);
-    }
-
-    public RestClient addHeader(String header, String value) {
-        mHeaders.put(header, value);
-
-        return this;
     }
 
     public RestClient addParam(String header, String value) {

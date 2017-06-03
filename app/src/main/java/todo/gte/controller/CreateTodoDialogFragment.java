@@ -20,9 +20,6 @@ import todo.gte.utils.RestClient;
 
 import java.lang.reflect.Type;
 
-/**
- * Created by muhlinge on 18/05/17.
- */
 public class CreateTodoDialogFragment extends DialogFragment {
 
     private EditText mTitle;
@@ -31,45 +28,6 @@ public class CreateTodoDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-    }
-
-    protected void proceedAddRequest(String title, String description, String endpoint) {
-        TodoApplication application = (TodoApplication) getActivity().getApplication();
-        String token = application.getUser().authToken;
-        RestClient restClient = new RestClient();
-        restClient.setSubscriber(getActivity())
-                .addHeader("Authorization", "Bearer " + token)
-                .addParam("title", title)
-                .addParam("description", description)
-                .post(endpoint, addTodoCallback());
-
-
-    }
-
-    protected ASFRequestListener<JsonObject> addTodoCallback() {
-        return new ASFRequestListener<JsonObject>() {
-            @Override
-            public void onSuccess(JsonObject response) {
-                Gson gson = new Gson();
-                Type type = new TypeToken<Todo>() {
-                }.getType();
-                Todo todo = gson.fromJson(response, type);
-                addItemToAdapter(todo);
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                System.err.println(e.toString());
-            }
-        };
-    }
-
-    protected void addItemToAdapter(Todo todo) {
-        TodoApplication app = (TodoApplication) getActivity().getApplication();
-        app.getUser().todos().add(0, todo);
-        RecyclerView todoRView = (RecyclerView) getActivity().findViewById(R.id.RTodoList);
-        todoRView.getAdapter().notifyDataSetChanged();
-        getDialog().dismiss();
     }
 
     @Override
@@ -109,7 +67,7 @@ public class CreateTodoDialogFragment extends DialogFragment {
                 String descriptionString = mDescription.getText().toString();
 
                 if (titleString.trim().length() > 0) {
-                    proceedAddRequest(titleString, descriptionString, "todos");
+                    proceedAddRequest(titleString, descriptionString);
                 } else {
                     mTitle.setError(getResources().getString(R.string.alert_fill_title));
                 }
@@ -117,6 +75,45 @@ public class CreateTodoDialogFragment extends DialogFragment {
         });
 
         return dialog;
+    }
+
+    protected void proceedAddRequest(String title, String description) {
+        TodoApplication application = (TodoApplication) getActivity().getApplication();
+        String token = application.getUser().authToken;
+        RestClient restClient = new RestClient();
+        restClient.setSubscriber(getActivity())
+                .addHeader("Authorization", "Bearer " + token)
+                .addParam("title", title)
+                .addParam("description", description)
+                .post("todos", addTodoCallback());
+
+
+    }
+
+    protected ASFRequestListener<JsonObject> addTodoCallback() {
+        return new ASFRequestListener<JsonObject>() {
+            @Override
+            public void onSuccess(JsonObject response) {
+                Gson gson = new Gson();
+                Type type = new TypeToken<Todo>() {
+                }.getType();
+                Todo todo = gson.fromJson(response, type);
+                addItemToAdapter(todo);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                System.err.println(e.toString());
+            }
+        };
+    }
+
+    protected void addItemToAdapter(Todo todo) {
+        TodoApplication app = (TodoApplication) getActivity().getApplication();
+        app.getUser().todos().add(0, todo);
+        RecyclerView todoRView = (RecyclerView) getActivity().findViewById(R.id.RTodoList);
+        todoRView.getAdapter().notifyDataSetChanged();
+        getDialog().dismiss();
     }
 
 }

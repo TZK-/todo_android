@@ -23,6 +23,7 @@ import todo.gte.controller.CreateTodoDialogFragment;
 import todo.gte.controller.R;
 import todo.gte.controller.adapters.DividerItemDecoration;
 import todo.gte.controller.adapters.TodoAdapter;
+import todo.gte.controller.adapters.TodoFilterAdapter;
 import todo.gte.controller.adapters.TodoRecyclerViewHolder;
 import todo.gte.models.Todo;
 import todo.gte.models.TodoFilter;
@@ -128,9 +129,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Spinner to filter tasks
         mFilterSpinner = (Spinner) findViewById(R.id.filter);
-        ArrayAdapter<TodoFilter> spinerAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item,
-                TodoFilter.values());
+        TodoFilterAdapter spinerAdapter = new TodoFilterAdapter(this, TodoFilter.values());
 
         spinerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mFilterSpinner.setAdapter(spinerAdapter);

@@ -171,13 +171,14 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
                 final long todoId = viewHolder.getItemId();
-
                 if (direction == ItemTouchHelper.LEFT){
                     RestClient restClient = new RestClient(mApplication.getUser());
                     restClient.setSubscriber(ListActivity.this)
-                            .delete("todos/" + todoId, new ASFRequestListener() {
+                            .delete("todos/" + todoId, new ASFRequestListener<JsonObject>() {
                                 @Override
-                                public void onSuccess(Object response) {
+                                public void onSuccess(JsonObject response) {
+                                    System.out.println("Delete success");
+                                    System.out.println(todoId);
                                     mApplication.getUser().todos().remove(todoId);
                                     mTodoRecyclerView.getAdapter().notifyDataSetChanged();
                                 }

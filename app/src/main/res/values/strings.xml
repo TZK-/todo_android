@@ -24,11 +24,9 @@
     <string name="alert_fill_title">Title is required</string>
     <string name="search_button">Search</string>
 
-    <string-array name="spinner">
-        <item>All</item>
-        <item>Active</item>
-        <item>Finished</item>
-    </string-array>
+    <string name="spinner_all"> All </string>
+    <string name="spinner_active"> Active </string>
+    <string name="spinner_finished"> Finished </string>
     <string name="title_activity_todo_details">TodoDetailsActivity</string>
 </resources>
 

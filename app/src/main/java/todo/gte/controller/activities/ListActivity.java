@@ -25,6 +25,7 @@ import todo.gte.controller.adapters.DividerItemDecoration;
 import todo.gte.controller.adapters.TodoAdapter;
 import todo.gte.controller.adapters.TodoRecyclerViewHolder;
 import todo.gte.models.Todo;
+import todo.gte.models.TodoFilter;
 import todo.gte.utils.RestClient;
 
 import java.lang.reflect.Type;
@@ -35,6 +36,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public RecyclerView mTodoRecyclerView;
     public String mSelectedFilter;
+    protected Spinner mFilterSpinner;
     protected TodoApplication mApplication;
     private String mSearchFieldValue;
     private TodoAdapter mAdapter;
@@ -125,16 +127,14 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         // Spinner to filter tasks
-        Spinner filterSpinner = (Spinner) findViewById(R.id.filter);
-        ArrayAdapter<CharSequence> spinerAdapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.spinner,
-                android.R.layout.simple_spinner_item
-        );
+        mFilterSpinner = (Spinner) findViewById(R.id.filter);
+        ArrayAdapter<TodoFilter> spinerAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item,
+                TodoFilter.values());
 
         spinerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        filterSpinner.setAdapter(spinerAdapter);
-        filterSpinner.setOnItemSelectedListener(this);
+        mFilterSpinner.setAdapter(spinerAdapter);
+        mFilterSpinner.setOnItemSelectedListener(this);
 
         initSwipe();
     }
@@ -155,8 +155,8 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
 
         EditText searchField = (EditText) findViewById(R.id.search_field);
         this.mSearchFieldValue = searchField.getText().toString();
-
-        Toast eToast = Toast.makeText(ListActivity.this, this.mSearchFieldValue, Toast.LENGTH_LONG);
+        String filter = mFilterSpinner.getSelectedItem().toString();
+        Toast eToast = Toast.makeText(ListActivity.this, filter, Toast.LENGTH_LONG);
         eToast.show();
     }
 

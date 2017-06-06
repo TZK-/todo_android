@@ -189,7 +189,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
                             });
                 } else {
                     System.out.println("right");
-                    Toast eToast = Toast.makeText(ListActivity.this, "RIGHT", Toast.LENGTH_LONG);
+                    Toast eToast = Toast.makeText(ListActivity.this, "Update to ended", Toast.LENGTH_LONG);
                     eToast.show();
                 }
             }
@@ -205,10 +205,10 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
                     float width = height / 3;
 
                     if(dX > 0){
-                        p.setColor(Color.parseColor("#388E3C"));
+                        p.setColor(Color.parseColor("#b7b7b7"));
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
                         c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_edit);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_close);
                         RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
                         c.drawBitmap(icon,null,icon_dest,p);
                     } else {

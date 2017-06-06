@@ -28,5 +28,5 @@
     <string name="spinner_all"> Tous </string>
     <string name="spinner_active"> En cours </string>
     <string name="spinner_finished"> Terminés </string>
-    <string name="title_activity_todo_details">TodoDetailsActivity</string>
+    <string name="title_activity_todo_details">Détails</string>
 </resources>

@@ -27,6 +27,6 @@
     <string name="spinner_all"> All </string>
     <string name="spinner_active"> Active </string>
     <string name="spinner_finished"> Finished </string>
-    <string name="title_activity_todo_details">TodoDetailsActivity</string>
+    <string name="title_activity_todo_details">Details</string>
 </resources>
 

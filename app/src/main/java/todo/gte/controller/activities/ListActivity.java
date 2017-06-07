@@ -146,9 +146,10 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
     private void fetchFileteredTodos(String filteredValue, int filterKey) {
         RestClient restClient = new RestClient(mApplication.getUser());
         restClient.setSubscriber(this)
+                .addParam("filter_type", "title")
                 .addParam("filter_value", filteredValue);
-        if(filterKey < 2)
-            restClient.addParam("filter_type", Integer.toString(filterKey));
+        if(filterKey <2)
+            restClient.addParam("status", Integer.toString(filterKey));
         restClient.get("todos", getFilteredTodosCallback());
 
     }

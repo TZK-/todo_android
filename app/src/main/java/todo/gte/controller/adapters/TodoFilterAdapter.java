@@ -11,9 +11,6 @@ import todo.gte.models.TodoFilter;
 
 import java.util.List;
 
-/**
- * Created by gwenael on 05/06/17.
- */
 public class TodoFilterAdapter extends ArrayAdapter<TodoFilter>{
 
     protected Context mContext;

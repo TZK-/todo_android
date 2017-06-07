@@ -17,6 +17,7 @@ import com.github.asifmujteba.easyvolley.ASFRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import org.json.JSONArray;
 import todo.gte.TodoApplication;
 import todo.gte.callbacks.OnTodoClickListener;
 import todo.gte.controller.CreateTodoDialogFragment;
@@ -150,7 +151,6 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
         if(filterKey < 2)
             restClient.addParam("status", Integer.toString(filterKey));
         restClient.get("todos", getFilteredTodosCallback());
-
     }
 
     private void showDialogTodo() {
@@ -177,27 +177,32 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
                 final long todoId = viewHolder.getItemId();
-                if (direction == ItemTouchHelper.LEFT){
-                    RestClient restClient = new RestClient(mApplication.getUser());
-                    restClient.setSubscriber(ListActivity.this)
-                            .delete("todos/" + todoId, new ASFRequestListener<JsonObject>() {
-                                @Override
-                                public void onSuccess(JsonObject response) {
-                                    System.out.println("Delete success");
-                                    System.out.println(todoId);
-                                    mApplication.getUser().todos().remove(todoId);
-                                    mTodoRecyclerView.getAdapter().notifyDataSetChanged();
-                                }
 
-                                @Override
-                                public void onFailure(Exception e) {
-                                    System.err.println(e.getMessage());
-                                }
-                            });
-                } else {
-                    System.out.println("right");
-                    Toast eToast = Toast.makeText(ListActivity.this, "Update to ended", Toast.LENGTH_LONG);
-                    eToast.show();
+                switch (direction) {
+                    case ItemTouchHelper.LEFT:
+                        try {
+                            RestClient restClient = new RestClient(mApplication.getUser());
+                            restClient.setSubscriber(ListActivity.this)
+                                    .delete("todos/" + todoId, new ASFRequestListener<JsonObject>() {
+                                        @Override
+                                        public void onSuccess(JsonObject response) {
+                                            mApplication.getUser().todos().remove(todoId);
+                                            mTodoRecyclerView.getAdapter().notifyDataSetChanged();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Exception e) {
+                                            System.err.println(e.getMessage());
+                                        }
+                                    });
+                        } catch (Exception e) {
+                            // Since we have a strange exception when running the callback,
+                            // we suppress of the error (the _todo_ is deleted anyway)
+                        }
+                        break;
+                    case ItemTouchHelper.RIGHT:
+                        // TODO implement the edit feature
+                        break;
                 }
             }
 
@@ -205,12 +210,13 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
                 Bitmap icon;
-                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE && isCurrentlyActive){
 
                     View itemView = viewHolder.itemView;
                     float height = (float) itemView.getBottom() - (float) itemView.getTop();
                     float width = height / 3;
 
+                    // Swipe to the right (edit)
                     if(dX > 0){
                         p.setColor(Color.parseColor("#b7b7b7"));
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
@@ -219,6 +225,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
                         RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
                         c.drawBitmap(icon,null,icon_dest,p);
                     } else {
+                        // Swipe to the left (delete)
                         p.setColor(Color.parseColor("#D32F2F"));
                         RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
                         c.drawRect(background,p);

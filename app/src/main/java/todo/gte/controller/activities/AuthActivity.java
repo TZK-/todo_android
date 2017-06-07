@@ -220,7 +220,7 @@ public class AuthActivity extends AppCompatActivity implements LoaderManager.Loa
 
         Gson gson = new Gson();
         editor.putString("user", gson.toJson(user));
-        editor.commit();
+        editor.apply();
     }
 
     /**

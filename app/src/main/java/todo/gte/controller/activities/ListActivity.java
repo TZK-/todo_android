@@ -24,12 +24,12 @@ import todo.gte.controller.R;
 import todo.gte.controller.adapters.DividerItemDecoration;
 import todo.gte.controller.adapters.TodoAdapter;
 import todo.gte.controller.adapters.TodoFilterAdapter;
-import todo.gte.controller.adapters.TodoRecyclerViewHolder;
 import todo.gte.models.Todo;
 import todo.gte.models.TodoFilter;
 import todo.gte.utils.RestClient;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -101,7 +101,6 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
                 startActivity(intent);
             }
         });
-
         mTodoRecyclerView.setAdapter(mAdapter);
 
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
@@ -144,19 +143,27 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
                 .get("todos", getTodosCallback());
     }
 
+    private void fetchFileteredTodos(String filteredValue, int filterKey) {
+        RestClient restClient = new RestClient(mApplication.getUser());
+        restClient.setSubscriber(this)
+                .addParam("filter_value", filteredValue);
+        if(filterKey < 2)
+            restClient.addParam("filter_type", Integer.toString(filterKey));
+        restClient.get("todos", getFilteredTodosCallback());
+
+    }
+
     private void showDialogTodo() {
         CreateTodoDialogFragment dialog = new CreateTodoDialogFragment();
         dialog.show(getSupportFragmentManager(), "todo_fragment");
     }
 
     private void searchThroughTodos() {
-        // TODO : EFFECTUER LA RECHERCHE
-
         EditText searchField = (EditText) findViewById(R.id.search_field);
         this.mSearchFieldValue = searchField.getText().toString();
-        String filter = mFilterSpinner.getSelectedItem().toString();
-        Toast eToast = Toast.makeText(ListActivity.this, filter, Toast.LENGTH_LONG);
-        eToast.show();
+        TodoFilter filter = (TodoFilter) mFilterSpinner.getSelectedItem();
+        int filterKey = filter.key;
+        fetchFileteredTodos(this.mSearchFieldValue, filterKey);
     }
 
     private void initSwipe(){
@@ -239,6 +246,26 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
                 mApplication.getUser().todos().addAll(todoList);
                 Collections.reverse(mApplication.getUser().todos());
                 mTodoRecyclerView.getAdapter().notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                System.out.println(e.getMessage());
+                Toast eToast = Toast.makeText(ListActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG);
+                eToast.show();
+            }
+        };
+    }
+
+    protected ASFRequestListener<JsonObject> getFilteredTodosCallback() {
+        return new ASFRequestListener<JsonObject>() {
+            @Override
+            public void onSuccess(JsonObject response) {
+
+                String todos = response.getAsJsonArray("todos").toString();
+                Intent filterIntent = new Intent(ListActivity.this, FilteredListActivity.class);
+                filterIntent.putExtra("todos", todos);
+                startActivity(filterIntent);
             }
 
             @Override

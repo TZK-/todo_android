@@ -14,6 +14,7 @@ import todo.gte.controller.adapters.TodoAdapter;
 import todo.gte.models.Todo;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 
 public class FilteredListActivity extends AppCompatActivity {
@@ -37,12 +38,11 @@ public class FilteredListActivity extends AppCompatActivity {
         String jsonTodoList = intent.getStringExtra("todos");
         mTodoList = gson.fromJson(jsonTodoList, type);
         mRecyclerView.setHasFixedSize(true);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(FilteredListActivity.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-
-        mAdapter = new TodoAdapter(mApplication.getUser().todos(), new OnTodoClickListener() {
+        Collections.reverse(mTodoList);
+        mAdapter = new TodoAdapter(mTodoList, new OnTodoClickListener() {
             @Override
             public void onItemClick(Todo todo) {
                 Intent intent = new Intent(FilteredListActivity.this, TodoDetailsActivity.class);
@@ -52,5 +52,7 @@ public class FilteredListActivity extends AppCompatActivity {
         });
 
         mRecyclerView.setAdapter(mAdapter);
+        System.out.println(mTodoList.size());
+        System.out.println(mRecyclerView.getAdapter().getItemCount());
     }
 }

@@ -105,7 +105,6 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
 
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
         mTodoRecyclerView.addItemDecoration(itemDecoration);
-
         fetchTodos();
 
         // FAB to create new task, opens dialog
@@ -148,7 +147,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
         restClient.setSubscriber(this)
                 .addParam("filter_type", "title")
                 .addParam("filter_value", filteredValue);
-        if(filterKey <2)
+        if(filterKey < 2)
             restClient.addParam("status", Integer.toString(filterKey));
         restClient.get("todos", getFilteredTodosCallback());
 

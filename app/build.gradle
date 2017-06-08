@@ -25,4 +25,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.github.asifmujteba:easyvolley:0.9.+'
+    compile ('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.6@aar')
 }

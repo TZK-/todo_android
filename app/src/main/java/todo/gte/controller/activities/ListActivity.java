@@ -15,8 +15,11 @@ import android.view.View;
 import android.widget.*;
 import com.github.asifmujteba.easyvolley.ASFRequestListener;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import org.json.JSONArray;
 import todo.gte.TodoApplication;
 import todo.gte.callbacks.OnTodoClickListener;
 import todo.gte.controller.CreateTodoDialogFragment;
@@ -81,6 +84,8 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_list);
         mApplication = (TodoApplication) getApplication();
 
+        mApplication.getUser().todos().clear();
+
         View contentView = findViewById(R.id.content_list_include);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -101,6 +106,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
         mTodoRecyclerView.setAdapter(mAdapter);
+
 
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
         mTodoRecyclerView.addItemDecoration(itemDecoration);
@@ -146,7 +152,8 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
         restClient.setSubscriber(this)
                 .addParam("filter_type", "title")
                 .addParam("filter_value", filteredValue);
-        if(filterKey < 2)
+
+        if(filterKey < TodoFilter.ALL.key)
             restClient.addParam("status", Integer.toString(filterKey));
         restClient.get("todos", getFilteredTodosCallback());
     }
@@ -199,17 +206,13 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
                         }
                         break;
                     case ItemTouchHelper.RIGHT:
-                        System.out.println(mApplication.getUser().authToken);
-                        final Todo mTodo = mApplication.getUser().todos().get(todoPosition);
+                        final Todo todo = mApplication.getUser().todos().get(todoPosition);
                         RestClient restClient = new RestClient(mApplication.getUser());
                         restClient.setSubscriber(ListActivity.this)
-                                .addParam("title", mTodo.title)
-                                .addParam("ended", "1")
                                 .put("todos/" + todoId, new ASFRequestListener<JsonObject>() {
                                     @Override
                                     public void onSuccess(JsonObject response) {
-                                        System.out.println(response.toString());
-                                        mTodo.ended = mTodo.ended ? false : true;
+                                        todo.ended = todo.ended ? false : true;
                                         mTodoRecyclerView.getAdapter().notifyDataSetChanged();
                                     }
 
@@ -262,20 +265,26 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
         return new ASFRequestListener<JsonObject>() {
             @Override
             public void onSuccess(JsonObject response) {
-                Gson gson = new Gson();
-                Type type = new TypeToken<List<Todo>>() {
-                }.getType();
-                List<Todo> todoList = gson.fromJson(response.getAsJsonArray("todos"), type);
-                mApplication.getUser().todos().addAll(todoList);
+                JsonArray todoList = response.getAsJsonArray("todos");
+
+                for (JsonElement el: todoList) {
+                    JsonObject jsonTodo = el.getAsJsonObject();
+                    Todo todo = new Todo();
+                    todo.title = jsonTodo.get("title").getAsString();
+                    todo.id = jsonTodo.get("id").getAsInt();
+                    todo.description = jsonTodo.get("description").getAsString();
+                    todo.ended = jsonTodo.get("ended").getAsInt() == 0 ? false : true;
+
+                    mApplication.getUser().todos().add(todo);
+                }
+
                 Collections.reverse(mApplication.getUser().todos());
                 mTodoRecyclerView.getAdapter().notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(Exception e) {
-                System.out.println(e.getMessage());
-                Toast eToast = Toast.makeText(ListActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG);
-                eToast.show();
+                System.err.println(e.getMessage());
             }
         };
     }
@@ -293,9 +302,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
 
             @Override
             public void onFailure(Exception e) {
-                System.out.println(e.getMessage());
-                Toast eToast = Toast.makeText(ListActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG);
-                eToast.show();
+                System.err.println(e.getMessage());
             }
         };
     }

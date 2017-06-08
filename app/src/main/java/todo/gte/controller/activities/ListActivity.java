@@ -17,7 +17,6 @@ import com.github.asifmujteba.easyvolley.ASFRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import org.json.JSONArray;
 import todo.gte.TodoApplication;
 import todo.gte.callbacks.OnTodoClickListener;
 import todo.gte.controller.CreateTodoDialogFragment;
@@ -30,7 +29,6 @@ import todo.gte.models.TodoFilter;
 import todo.gte.utils.RestClient;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -177,7 +175,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
                 final long todoId = viewHolder.getItemId();
-
+                final int todoPosition = viewHolder.getAdapterPosition();
                 switch (direction) {
                     case ItemTouchHelper.LEFT:
                         try {
@@ -186,7 +184,7 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
                                     .delete("todos/" + todoId, new ASFRequestListener<JsonObject>() {
                                         @Override
                                         public void onSuccess(JsonObject response) {
-                                            mApplication.getUser().todos().remove(todoId);
+                                            mApplication.getUser().todos().remove(todoPosition);
                                             mTodoRecyclerView.getAdapter().notifyDataSetChanged();
                                         }
 
@@ -201,7 +199,25 @@ public class ListActivity extends AppCompatActivity implements AdapterView.OnIte
                         }
                         break;
                     case ItemTouchHelper.RIGHT:
-                        // TODO implement the edit feature
+                        System.out.println(mApplication.getUser().authToken);
+                        final Todo mTodo = mApplication.getUser().todos().get(todoPosition);
+                        RestClient restClient = new RestClient(mApplication.getUser());
+                        restClient.setSubscriber(ListActivity.this)
+                                .addParam("title", mTodo.title)
+                                .addParam("ended", "1")
+                                .put("todos/" + todoId, new ASFRequestListener<JsonObject>() {
+                                    @Override
+                                    public void onSuccess(JsonObject response) {
+                                        System.out.println(response.toString());
+                                        mTodo.ended = mTodo.ended ? false : true;
+                                        mTodoRecyclerView.getAdapter().notifyDataSetChanged();
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        System.err.println(e.getMessage());
+                                    }
+                                });
                         break;
                 }
             }

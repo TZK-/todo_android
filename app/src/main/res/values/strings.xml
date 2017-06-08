@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Todo GTE</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">About</string>
+    <string name="action_disconnect">Disconnect</string>
     <string name="title_activity_login">Authentication</string>
 
     <!-- Strings related to login -->

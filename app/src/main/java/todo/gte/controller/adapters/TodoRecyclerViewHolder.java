@@ -1,5 +1,6 @@
 package todo.gte.controller.adapters;
 
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -22,6 +23,8 @@ public class TodoRecyclerViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(final Todo todo, final OnTodoClickListener listener) {
         this.mTitleTextView.setText(todo.title);
+        if(todo.ended)
+            this.mTitleTextView.setPaintFlags(this.mTitleTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         this.mContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

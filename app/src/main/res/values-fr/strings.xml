@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Todo GTE</string>
-    <string name="action_settings">Paramètres</string>
+    <string name="action_settings">A propos</string>
+    <string name="action_disconnect">Se déconnecter</string>
     <string name="title_activity_login">Authentification</string>
 
     <!-- Strings related to login -->
